@@ -1,1 +1,547 @@
 @import "tailwindcss";
+
+
+/* ========================================
+   CLERK USER BUTTON CUSTOMIZATION
+   ======================================== */
+
+
+.cl-avatarBox {
+  width: 3rem;
+  height: 3rem;
+}
+
+
+.arrows {
+  height: 40px;
+  width: 40px;
+  margin: 1px;
+}
+
+
+/* ========================================
+   TOAST NOTIFICATION ANIMATIONS
+   ======================================== */
+
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+
+@keyframes fade-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+}
+
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out forwards;
+}
+
+
+.animate-fade-out-right {
+  animation: fade-out-right 0.3s ease-in forwards;
+}
+
+
+/* ========================================
+   LOADING & SPINNER ANIMATIONS
+   ======================================== */
+
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+
+/* ========================================
+   IMAGE FADE-IN ANIMATION
+   ======================================== */
+
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.opacity-0 {
+  opacity: 0;
+}
+
+
+.opacity-100 {
+  opacity: 1;
+}
+
+
+/* ========================================
+   TOAST NOTIFICATION STYLES
+   ======================================== */
+
+
+.toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  animation: slide-in-right 0.3s ease-out;
+}
+
+
+.toast-success {
+  background-color: rgb(34, 197, 94); /* green-500 */
+}
+
+
+.toast-error {
+  background-color: rgb(239, 68, 68); /* red-500 */
+}
+
+
+.toast-warning {
+  background-color: rgb(234, 179, 8); /* yellow-500 */
+}
+
+
+.toast-info {
+  background-color: rgb(59, 130, 246); /* blue-500 */
+}
+
+
+.toast-icon {
+  font-size: 1.125rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+
+/* ========================================
+   BUTTON STATES & TRANSITIONS
+   ======================================== */
+
+
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+
+button:not(:disabled):hover {
+  transform: translateY(-2px);
+}
+
+
+button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* ========================================
+   INLINE SIZE BUTTON STYLES
+   ======================================== */
+
+
+.size-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0 0.75rem;
+  border: 2px solid rgb(203, 213, 225); /* slate-300 */
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+  color: rgb(71, 85, 105); /* slate-600 */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+.size-button:hover:not(:disabled) {
+  border-color: rgb(236, 72, 153); /* pink-500 */
+  background-color: rgb(252, 231, 243); /* pink-100 */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.size-button-active {
+  background-color: rgb(236, 72, 153); /* pink-500 */
+  color: white;
+  border-color: rgb(236, 72, 153);
+  box-shadow: 0 6px 12px rgba(236, 72, 153, 0.3);
+  font-weight: 700;
+}
+
+
+.size-button-active:hover {
+  background-color: rgb(219, 39, 119); /* pink-600 */
+  border-color: rgb(219, 39, 119);
+  box-shadow: 0 8px 16px rgba(219, 39, 119, 0.3);
+}
+
+
+.size-button-inactive {
+  background-color: white;
+  color: rgb(71, 85, 105);
+  border-color: rgb(203, 213, 225);
+}
+
+
+.size-button-inactive:hover {
+  border-color: rgb(236, 72, 153);
+  background-color: rgb(252, 231, 243);
+}
+
+
+.size-button:focus-visible {
+  outline: 2px solid rgb(236, 72, 153);
+  outline-offset: 2px;
+}
+
+
+/* ========================================
+   FORM INPUTS & SELECTS
+   ======================================== */
+
+
+select,
+input {
+  transition: all 0.2s ease;
+}
+
+
+select:focus,
+input:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: rgb(236, 72, 153); /* pink-500 */
+  border-color: transparent;
+}
+
+
+/* ========================================
+   LOADING SKELETON PULSE
+   ======================================== */
+
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgb(226, 232, 240) 25%,
+    rgb(241, 245, 249) 50%,
+    rgb(226, 232, 240) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading-skeleton 2s infinite;
+}
+
+
+@keyframes loading-skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+/* ========================================
+   PRODUCT DETAILS PAGE SPECIFIC STYLES
+   ======================================== */
+
+
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+
+.product-image {
+  width: 100%;
+  height: 20rem;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+
+.product-image:hover {
+  transform: scale(1.02);
+}
+
+
+.product-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+
+.size-selector,
+.quantity-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+
+.quantity-button {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  border: 1px solid rgb(203, 213, 225);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+
+.quantity-button:not(:disabled):hover {
+  background-color: rgb(241, 245, 249);
+  border-color: rgb(226, 232, 240);
+}
+
+
+.quantity-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+.quantity-display {
+  width: 2.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+
+/* ========================================
+   ADD TO CART BUTTON
+   ======================================== */
+
+
+.add-to-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  background-color: rgb(236, 72, 153); /* pink-500 */
+  color: white;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+}
+
+
+.add-to-cart-btn:not(:disabled):hover {
+  background-color: rgb(219, 39, 119); /* pink-600 */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+}
+
+
+.add-to-cart-btn:disabled {
+  background-color: rgb(148, 163, 184); /* slate-400 */
+  cursor: not-allowed;
+}
+
+
+.add-to-cart-btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+
+.add-to-cart-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: 50%;
+  left: 50%;
+  margin-left: -0.5rem;
+  margin-top: -0.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+
+/* ========================================
+   ERROR & SUCCESS STATES
+   ======================================== */
+
+
+.error-container {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  max-width: 28rem;
+  text-align: center;
+}
+
+
+.error-title {
+  color: rgb(220, 38, 38); /* red-600 */
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+
+.error-message {
+  color: rgb(71, 85, 105); /* slate-600 */
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+
+.info-box {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: rgb(239, 246, 255); /* blue-50 */
+  border-radius: 0.5rem;
+}
+
+
+.info-box-text {
+  font-size: 0.75rem;
+  color: rgb(30, 58, 138); /* blue-900 */
+  font-weight: 500;
+}
+
+
+/* ========================================
+   RESPONSIVE ADJUSTMENTS
+   ======================================== */
+
+
+@media (max-width: 768px) {
+  .toast {
+    top: 0.5rem;
+    right: 0.5rem;
+    left: 0.5rem;
+    margin: 0;
+  }
+
+  .product-image {
+    height: 16rem;
+  }
+
+  .size-button {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
+  }
+}
+
+
+/* ========================================
+   ACCESSIBILITY & MISC
+   ======================================== */
+
+
+/* Focus styles for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid rgb(236, 72, 153);
+  outline-offset: 2px;
+}
+
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+
+/* Prevent layout shift during font load */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
