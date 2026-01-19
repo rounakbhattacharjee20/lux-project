@@ -1,14 +1,24 @@
 // src/pages/Home.jsx
-import React from "react";
+
+import React, { useEffect } from "react";
 import HeroSwitcher from "../HeroSwitcher.jsx";
-import { useUser } from "@clerk/clerk-react"; // Clerk hook
+import { useUser } from "@clerk/clerk-react";
+import { getData } from "../../context/DataContext.jsx";
 
 const Home = () => {
-  const { user } = useUser(); // current logged‑in user
+  const { user } = useUser();
+  const { fetchAllProducts } = getData();
 
-  // show either full name, username, or email
   const displayName =
-    user?.fullName || user?.username || user?.primaryEmailAddress?.emailAddress || "Guest";
+    user?.fullName ||
+    user?.username ||
+    user?.primaryEmailAddress?.emailAddress ||
+    "Guest";
+
+  useEffect(() => {
+    // still load products once so the rest of the app has data
+    fetchAllProducts();
+  }, [fetchAllProducts]);
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -22,20 +32,10 @@ const Home = () => {
         </div>
       </div>
 
-      {/* hero area on dark background, not full page */}
-      <div className="bg-[#050816] pb-10">
+      {/* hero / categories take the whole visible page width */}
+      <div className="bg-[#050816] min-h-[calc(100vh-40px)] pb-10">
         <HeroSwitcher />
       </div>
-
-      {/* rest of page on light background */}
-      <section className="max-w-6xl mx-auto px-4 py-10">
-        <h2 className="text-2xl font-bold text-slate-900 mb-3">
-          Handpicked for you
-        </h2>
-        <p className="text-sm md:text-base text-slate-600">
-          Explore curated collections designed for your store and your customers.
-        </p>
-      </section>
     </div>
   );
 };

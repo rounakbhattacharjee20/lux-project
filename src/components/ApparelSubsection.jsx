@@ -1,34 +1,22 @@
 // src/components/ApparelSubsection.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-const APPAREL_TYPES = {
-  women: [
-    { id: "t-shirt", label: "T-Shirt", icon: "👕" },
-    { id: "fashion-pant", label: "Fashion Pant", icon: "👖" },
-    { id: "track-pant", label: "Track Pant", icon: "🩳" },
-    { id: "jeans", label: "Jeans", icon: "👖" },
-  ],
-  men: [
-    { id: "t-shirt", label: "T-Shirt", icon: "👕" },
-    { id: "shirt", label: "Shirt", icon: "🧥" },
-    { id: "pants", label: "Pants", icon: "👖" },
-    { id: "shorts", label: "Shorts", icon: "🩳" },
-  ],
-  kids: [
-    { id: "t-shirt", label: "T-Shirt", icon: "👕" },
-    { id: "shorts", label: "Shorts", icon: "🩳" },
-    { id: "dress", label: "Dress", icon: "👗" },
-  ],
-};
+import { getData } from "../context/DataContext.jsx";
 
 const ApparelSubsection = ({ category, onClose }) => {
+  const { subcategories, fetchSubcategories } = getData();
   const navigate = useNavigate();
-  const apparels = APPAREL_TYPES[category] || [];
 
-  const handleApparelClick = (apparelId) => {
-    // navigate to product page with both category and apparel filter
-    navigate(`/product?category=${category}&apparel=${apparelId}`);
+  useEffect(() => {
+    // Fetch subcategories when category changes
+    if (category) {
+      fetchSubcategories(category);
+    }
+  }, [category, fetchSubcategories]);
+
+  const handleSubcategoryClick = (subcategoryId) => {
+    // Navigate to product page with category and subcategory filters
+    navigate(`/product?category=${category}&apparel=${subcategoryId}`);
     onClose();
   };
 
@@ -38,7 +26,7 @@ const ApparelSubsection = ({ category, onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4"
+        className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
@@ -53,21 +41,24 @@ const ApparelSubsection = ({ category, onClose }) => {
           </button>
         </div>
 
-        <div className="space-y-3">
-          {apparels.map((apparel) => (
-            <button
-              key={apparel.id}
-              onClick={() => handleApparelClick(apparel.id)}
-              className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-pink-500 hover:bg-pink-50 transition"
-            >
-              <span className="text-3xl">{apparel.icon}</span>
-              <span className="text-lg font-semibold text-slate-900">
-                {apparel.label}
-              </span>
-              <span className="ml-auto text-pink-500">→</span>
-            </button>
-          ))}
-        </div>
+        {subcategories.length === 0 ? (
+          <p className="text-slate-500 text-center py-4">Loading subcategories...</p>
+        ) : (
+          <div className="space-y-3">
+            {subcategories.map((sub) => (
+              <button
+                key={sub.dd_index}
+                onClick={() => handleSubcategoryClick(sub.dd_index)}
+                className="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-200 hover:border-pink-500 hover:bg-pink-50 transition"
+              >
+                <span className="text-lg font-semibold text-slate-900">
+                  {sub.dd_value || `Subcategory ${sub.dd_index}`}
+                </span>
+                <span className="ml-auto text-pink-500">→</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-// src/pages/Product.jsx
+// src/components/pages/Product.jsx
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getData } from "../../context/DataContext.jsx";
@@ -17,79 +17,67 @@ const SORT_OPTIONS = [
 ];
 
 const Product = () => {
-  const { fetchAllProducts, error, filteredProducts, data } = getData();
+  const {
+    fetchAllProducts,
+    fetchProductsByCategory,
+    fetchProductsByCategoryAndSubcategory,
+    error,
+    filteredProducts,
+    data,
+    setSelectedCategory,
+    setSelectedSubcategory,
+  } = getData();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("top");
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false); // ✅ NEW: mobile filter state
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const locationHook = useLocation();
   const searchParams = new URLSearchParams(locationHook.search);
   const heroCategory = searchParams.get("category");
   const apparelType = searchParams.get("apparel");
 
+  // Fetch products based on URL params
   useEffect(() => {
-    fetchAllProducts();
-  }, [fetchAllProducts]);
+    if (heroCategory && apparelType) {
+      setSelectedCategory(heroCategory);
+      setSelectedSubcategory(apparelType);
+      fetchProductsByCategoryAndSubcategory(heroCategory, apparelType);
+    } else if (heroCategory) {
+      setSelectedCategory(heroCategory);
+      setSelectedSubcategory("ALL");
+      fetchProductsByCategory(heroCategory);
+    } else {
+      setSelectedCategory("ALL");
+      setSelectedSubcategory("ALL");
+      fetchAllProducts();
+    }
+  }, [
+    heroCategory,
+    apparelType,
+    fetchAllProducts,
+    fetchProductsByCategory,
+    fetchProductsByCategoryAndSubcategory,
+    setSelectedCategory,
+    setSelectedSubcategory,
+  ]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [filteredProducts, sortBy, heroCategory, apparelType]);
 
-  const isLoading = !data;
+  // IMPORTANT: loading should follow context "loading", not just data null
+  const isLoading = !data && filteredProducts.length === 0;
   const isEmpty = data && data.length === 0;
 
+  // sorted view of filteredProducts (always an array)
   const baseProducts = [...filteredProducts];
-  let filtered = [...baseProducts];
-
-  console.log(
-    "heroCategory from URL =>",
-    heroCategory,
-    "apparelType =>",
-    apparelType,
-    baseProducts.map((p) => p.category?.name)
-  );
-
-  if (heroCategory && heroCategory !== "all") {
-    filtered = filtered.filter((p) => {
-      const name = (p.category?.name || "").toLowerCase();
-
-      switch (heroCategory) {
-        case "men":
-          return name === "clothes" || name === "royal items";
-        case "women":
-          return name === "clothes";
-        case "kids":
-          return name === "kids";
-        case "new-arrival":
-          return name.startsWith("automation category");
-        default:
-          return true;
-      }
-    });
-  }
-
-  if (apparelType && apparelType !== "all") {
-    filtered = filtered.filter((p) => {
-      const title = (p.title || "").toLowerCase();
-      const description = (p.description || "").toLowerCase();
-      const normalizedApparel = apparelType.toLowerCase().replace("-", " ");
-
-      return (
-        title.includes(normalizedApparel) ||
-        description.includes(normalizedApparel)
-      );
-    });
-  }
-
-  let sorted = [...filtered];
+  let sorted = [...baseProducts];
 
   if (sortBy === "latest") {
-    sorted.sort((a, b) => b.id - a.id);
+    sorted.sort((a, b) => (b.prodm_rid || 0) - (a.prodm_rid || 0));
   } else if (sortBy === "top") {
-    sorted.sort((a, b) => b.price - a.price);
-  } else if (sortBy === "recent") {
-    // keep current order
+    sorted.sort((a, b) => (b.price || 0) - (a.price || 0));
   }
 
   const totalItems = sorted.length;
@@ -110,7 +98,7 @@ const Product = () => {
   return (
     <div className="min-h-screen py-6 sm:py-10 bg-gradient-to-b from-pink-50 via-slate-50 to-purple-50">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 mb-10">
-        {/* Page Heading - Mobile Optimized */}
+        {/* Page Heading */}
         <div className="mb-6 sm:mb-8 flex flex-col gap-1 sm:gap-2">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">
             Discover your next favorite
@@ -118,8 +106,6 @@ const Product = () => {
           <p className="text-xs sm:text-sm md:text-base text-slate-500">
             Filter by category, brand, and price to find products that match your style.
           </p>
-
-          {/* Active Filters Display */}
           {(heroCategory || apparelType) && (
             <p className="text-xs text-slate-600 mt-1 sm:mt-2 font-semibold">
               Filters:{" "}
@@ -129,7 +115,7 @@ const Product = () => {
               {apparelType && (
                 <span className="capitalize text-pink-600">
                   {" "}
-                  • {apparelType.replace("-", " ")}
+                  • {apparelType}
                 </span>
               )}
             </p>
@@ -153,9 +139,8 @@ const Product = () => {
           </p>
         ) : (
           <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
-            {/* Filter Sidebar - Mobile Drawer */}
+            {/* Filter Sidebar */}
             <div className="w-full md:w-1/3 lg:w-1/4">
-              {/* ✅ Mobile: Filter Toggle Button */}
               <button
                 onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
                 className="md:hidden w-full flex items-center gap-2 bg-white border border-slate-300 rounded-lg px-4 py-2.5 mb-4 font-semibold text-slate-700 hover:bg-slate-50 transition"
@@ -164,7 +149,6 @@ const Product = () => {
                 <span>Filters</span>
               </button>
 
-              {/* ✅ Desktop: Always visible | Mobile: Drawer on toggle */}
               <div
                 className={`${
                   mobileFilterOpen
@@ -177,7 +161,6 @@ const Product = () => {
                   className="bg-white md:bg-transparent p-4 sm:p-6 overflow-y-auto max-h-[80vh] md:max-h-none w-full md:w-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* ✅ Mobile: Close Button */}
                   <button
                     onClick={() => setMobileFilterOpen(false)}
                     className="md:hidden mb-4 p-2"
@@ -192,7 +175,6 @@ const Product = () => {
 
             {/* Products Grid + Sort + Pagination */}
             <div className="w-full md:w-2/3 lg:w-3/4">
-              {/* Sort Dropdown - Mobile Optimized */}
               <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
                 <p className="text-xs sm:text-sm text-slate-600 order-2 sm:order-1">
                   Showing{" "}
@@ -221,14 +203,12 @@ const Product = () => {
                 <NoResults />
               ) : (
                 <>
-                  {/* ✅ Mobile Optimized Grid: 1 col on mobile, 2 on tablet, 4 on desktop */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 auto-rows-max">
                     {currentItems.map((product) => (
                       <ProductCard key={product.id} product={product} />
                     ))}
                   </div>
 
-                  {/* ✅ Mobile Optimized Pagination */}
                   <div className="mt-6 sm:mt-10 flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
                     <button
                       onClick={() => goToPage(currentPage - 1)}
@@ -243,7 +223,6 @@ const Product = () => {
                       Prev
                     </button>
 
-                    {/* ✅ Hide some page buttons on mobile */}
                     {Array.from({ length: totalPages }).map((_, index) => {
                       const page = index + 1;
                       const showOnMobile =

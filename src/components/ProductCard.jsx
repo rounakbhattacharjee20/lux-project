@@ -1,4 +1,6 @@
 // src/components/ProductCard.jsx
+//console.log("🃏 ProductCard product", product);
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext.jsx";

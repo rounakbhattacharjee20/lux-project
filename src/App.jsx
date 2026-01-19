@@ -1,6 +1,7 @@
-// App.jsx
+// src/App.jsx
 import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { DataProvider } from "./context/DataContext"; // ADD THIS LINE
 import Home from "./components/pages/Home";
 import About from "./components/pages/About";
 import Contact from "./components/pages/Contact";
@@ -35,7 +36,7 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <DataProvider> {/* WRAP YOUR ENTIRE APP */}
       <Navbar
         location={location}
         getLocation={getLocation}
@@ -47,9 +48,12 @@ const App = () => {
         <Route path="/home" element={<Home />} />
         <Route path="/product" element={<Product />} />
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/products" element={<Product />} />
+        <Route path="/products" element={<Product />} />
+
         <Route path="/cart" element={<Cart />} />
       </Routes>
-    </>
+    </DataProvider> 
   );
 };
 
